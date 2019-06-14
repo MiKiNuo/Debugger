@@ -1,6 +1,6 @@
 ﻿using UnityEngine;
 
-namespace LuaInterface
+namespace DebugTool
 {
     public interface ICmd
     {
@@ -14,6 +14,7 @@ namespace LuaInterface
     {
         void Log(string msg, string stack, LogType type);
     }
+
 }
 
 

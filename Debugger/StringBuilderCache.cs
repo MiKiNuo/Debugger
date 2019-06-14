@@ -1,10 +1,9 @@
 ﻿/*copy from .net by topameng*/
 
 using System;
-using System.Reflection;
 using System.Text;
 
-namespace LuaInterface
+namespace DebugTool
 {
     public static class StringBuilderCache
     {
@@ -16,8 +15,7 @@ namespace LuaInterface
         {
             StringBuilder sb = _cache;
 
-            if (sb != null && sb.Capacity >= capacity)
-            {
+            if (sb != null && sb.Capacity >= capacity) {
                 _cache = null;
                 sb.Clear();
                 return sb;
@@ -35,10 +33,12 @@ namespace LuaInterface
 
         public static void Release(StringBuilder sb)
         {
-            if (sb.Capacity <= MAX_BUILDER_SIZE)
-            {
+            if (sb.Capacity <= MAX_BUILDER_SIZE) {
                 _cache = sb;
             }
         }
     }
+
+
+
 }

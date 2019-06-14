@@ -33,21 +33,28 @@
     <AllowUnsafeBlocks>true</AllowUnsafeBlocks>
   </PropertyGroup>
   <ItemGroup>
-    <Reference Include="CString">
-      <HintPath>.\CString.dll</HintPath>
-    </Reference>
     <Reference Include="System" />
-    <Reference Include="UnityEngine">
-      <HintPath>G:\mylab\Library\UnityAssemblies\UnityEngine.dll</HintPath>
+    <Reference Include="UnityEngine, Version=0.0.0.0, Culture=neutral, processorArchitecture=MSIL">
+      <SpecificVersion>False</SpecificVersion>
+      <HintPath>D:\Program Files (x86)\Unity2018.4.0\Editor\Data\Managed\UnityEngine.dll</HintPath>
     </Reference>
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="ArrayPool.cs" />
     <Compile Include="ConstStringTable.cs" />
+    <Compile Include="CString.cs" />
     <Compile Include="Debugger.cs" />
     <Compile Include="ExtendMethods.cs" />
+    <Compile Include="ExtensionLibs.cs" />
+    <Compile Include="FreeList.cs" />
     <Compile Include="ILog.cs" />
+    <Compile Include="IStringBlock.cs" />
+    <Compile Include="NumberFormatercs.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="StringBuilderCache.cs" />
+    <Compile Include="StringBuilderExtensions.cs" />
+    <Compile Include="StringPool.cs" />
+    <Compile Include="zstring.cs" />
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <PropertyGroup>

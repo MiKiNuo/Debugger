@@ -2,7 +2,7 @@
 using System;
 using System.Text;
 
-namespace LuaInterface
+namespace DebugTool
 {
     public static partial class StringBuilderExtensionMethods
     {
@@ -15,8 +15,11 @@ namespace LuaInterface
         public static void AppendLineEx(this StringBuilder sb, string str = "")
         {
             sb.Append(str).Append("\r\n");
-        }        
+        }
     }
+
 }
+
+
 
 
