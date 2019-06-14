@@ -11,3 +11,5 @@ just a log system for tolua#. (detail in chinese)
 通过封装Debugger.Log 到dll可以在点击log时，避免错误跳到Debugger.Log内部情况
 
 当lua堆栈离开游戏进程时，对于unity log 从一定程度能避免卡死。（具体见tolua# wiki）
+
+新加Zstring和CString相关代码，增加红、蓝、黄、绿打印输出，增加相关StringBuilder扩展
