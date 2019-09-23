@@ -17,9 +17,10 @@ public static class Debugger
     {
         using (zstring.Block()) {
             DateTime time = DateTime.Now;
+            var str0 = zstring.Concat(time.Year, "-", time.Month, "-", time.Day,"-");
             var str1 = zstring.Concat(ConstStringTable.GetTimeIntern(time.Hour), ":", ConstStringTable.GetTimeIntern(time.Minute), ":", ConstStringTable.GetTimeIntern(time.Second), ".");
             var str2 = zstring.Concat(time.Millisecond, "-", Time.frameCount % 999, ":", str);
-            var str3 = zstring.Concat(str1, str2);
+            var str3 = zstring.Concat(str0,str1, str2);
             return str3;
         }
     }
