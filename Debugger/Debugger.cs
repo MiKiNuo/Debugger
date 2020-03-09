@@ -1,101 +1,106 @@
 ﻿using UnityEngine;
 using System;
-using System.Globalization;
 using DebugTool;
 
 public static class Debugger
 {
-    public static bool useLog = true;
-    public static string threadStack = string.Empty;
+    public static bool UseLog = true;
+    private static string threadStack = string.Empty;
+    private static CString sb = new CString(256);
 
     static Debugger()
     {
+        for (int i = 24; i < 70; i++)
+        {
+            StringPool.PreAlloc(i, 2);
+        }
     }
+
 
     //减少gc alloc
     static string GetLogFormat(string str)
     {
-        using (zstring.Block()) {
-            DateTime time = DateTime.Now;
-            var str0 = zstring.Concat(time.Year, "-", time.Month, "-", time.Day,"-");
-            var str1 = zstring.Concat(ConstStringTable.GetTimeIntern(time.Hour), ":", ConstStringTable.GetTimeIntern(time.Minute), ":", ConstStringTable.GetTimeIntern(time.Second), ".");
-            var str2 = zstring.Concat(time.Millisecond, "-", Time.frameCount % 999, ":", str);
-            var str3 = zstring.Concat(str0,str1, str2);
-            return str3;
-        }
+        var time = DateTime.Now;
+        sb.Clear();
+        sb.Append(ConstStringTable.GetTimeIntern(time.Year))
+            .Append("-")
+            .Append(ConstStringTable.GetTimeIntern(time.Month))
+            .Append("-")
+            .Append(ConstStringTable.GetTimeIntern(time.Day))
+            .Append("-")
+            .Append(ConstStringTable.GetTimeIntern(time.Hour))
+            .Append(":")
+            .Append(ConstStringTable.GetTimeIntern(time.Minute))
+            .Append(":")
+            .Append(ConstStringTable.GetTimeIntern(time.Second))
+            .Append(".")
+            .Append(time.Millisecond)
+            .Append("-")
+            .Append(Time.frameCount % 999)
+            .Append(": ")
+            .Append(str);
+
+        var dest = StringPool.Alloc(sb.Length);
+        sb.CopyToString(dest);
+        return dest;
     }
 
     public static void Log(string str)
     {
+        if (!UseLog)
+            return;
         str = GetLogFormat(str);
-
-        if (useLog) {
-            Debug.Log(str);
-        }
+        Debug.Log(str);
+        StringPool.Collect(str);
     }
 
 
-    public static void LogYellow<TA>(TA message) where TA : IConvertible
+    public static void LogYellow(object message)
     {
-        using (zstring.Block()) {
-            var str = zstring.Concat("<color=Yellow>", message.ToString(CultureInfo.InvariantCulture), "</color>");
-            Log(str.ToString());
-        }
+        var str = string.Format("<color=Yellow>{0}</color>", message.ToString());
+        Log(str);
     }
 
-    public static void LogRed<TA>(TA message) where TA : IConvertible
+    public static void LogRed(object message)
     {
-        using (zstring.Block()) {
-            var str = zstring.Concat("<color=Red>", message.ToString(CultureInfo.InvariantCulture), "</color>");
-            Log(str.ToString());
-        }
+        var str = string.Format("<color=Red>{0}</color>", message.ToString());
+        Log(str);
     }
 
-    public static void LogBlue<TA>(TA message) where TA : IConvertible
+    public static void LogBlue(object message)
     {
-        using (zstring.Block()) {
-            var str = zstring.Concat("<color=Blue>", message.ToString(CultureInfo.InvariantCulture), "</color>");
-            Log(str.ToString());
-        }
+        var str = string.Format("<color=Blue>{0}</color>", message.ToString());
+        Log(str);
     }
 
 
-    public static void LogGreen<TA>(TA message) where TA : IConvertible
+    public static void LogGreen(object message)
     {
-        using (zstring.Block()) {
-            var str = zstring.Concat("<color=Green>", message.ToString(CultureInfo.InvariantCulture), "</color>");
-            Log(str.ToString());
-        }
+        var str = string.Format("<color=Green>{0}</color>", message.ToString());
+        Log(str);
     }
 
-    public static void Log<TA>(TA message) where TA : IConvertible
+    public static void Log(object str)
     {
-        Log(message.ToString(CultureInfo.InvariantCulture));
+        Log(str);
     }
 
-    public static void Log<TA>(string str, TA arg0) where TA : IConvertible
+    public static void Log(string str, object arg0)
     {
-        using (zstring.Block()) {
-            var s = zstring.Format(str, arg0.ToString(CultureInfo.InvariantCulture));
-            Log(s.ToString());
-        }
+        string s = string.Format(str, arg0);
+        Log(s);
     }
 
-    public static void Log<TA>(string str, TA arg0, TA arg1) where TA : IConvertible
+    public static void Log(string str, object arg0, object arg1)
     {
-        using (zstring.Block())
-        {
-            var s = zstring.Format(str, arg0.ToString(CultureInfo.InvariantCulture), arg1.ToString(CultureInfo.InvariantCulture));
-            Log(s.ToString());
-        }
+        string s = string.Format(str, arg0, arg1);
+        Log(s);
     }
 
-    public static void Log<TA>(string str, TA arg0, TA arg1, TA arg2) where TA : IConvertible
+    public static void Log(string str, object arg0, object arg1, object arg2)
     {
-        using (zstring.Block()) {
-            var s = zstring.Format(str, arg0.ToString(CultureInfo.InvariantCulture), arg1.ToString(CultureInfo.InvariantCulture), arg2.ToString(CultureInfo.InvariantCulture));
-            Log(s.ToString());
-        }
+        string s = string.Format(str, arg0, arg1, arg2);
+        Log(s);
     }
 
     public static void Log(string str, params object[] param)
@@ -106,40 +111,34 @@ public static class Debugger
 
     public static void LogWarning(string str)
     {
+        if (!UseLog)
+            return;
         str = GetLogFormat(str);
-
-        if (useLog) {
-            Debug.LogWarning(str);
-        }
+        Debug.LogWarning(str);
+        StringPool.Collect(str);
     }
 
-    public static void LogWarning<TA>(TA message) where TA : IConvertible
+    public static void LogWarning(object message)
     {
-        LogWarning(message.ToString(CultureInfo.InvariantCulture));
+        LogWarning(message.ToString());
     }
 
-    public static void LogWarning<TA>(string str, TA arg0) where TA : IConvertible
+    public static void LogWarning(string str, object arg0)
     {
-        using (zstring.Block()) {
-            var s = zstring.Format(str, arg0.ToString(CultureInfo.InvariantCulture));
-            LogWarning(s.ToString());
-        }
+        string s = string.Format(str, arg0);
+        LogWarning(s);
     }
 
-    public static void LogWarning<TA>(string str, TA arg0, TA arg1) where TA : IConvertible
+    public static void LogWarning(string str, object arg0, object arg1)
     {
-        using (zstring.Block()) {
-            var s = zstring.Format(str, arg0.ToString(CultureInfo.InvariantCulture), arg1.ToString(CultureInfo.InvariantCulture));
-            LogWarning(s.ToString());
-        }
+        string s = string.Format(str, arg0, arg1);
+        LogWarning(s);
     }
 
-    public static void LogWarning<TA>(string str, TA arg0, TA arg1, TA arg2) where TA : IConvertible
+    public static void LogWarning(string str, object arg0, object arg1, object arg2)
     {
-        using (zstring.Block()) {
-            var s = zstring.Format(str, arg0.ToString(CultureInfo.InvariantCulture), arg1.ToString(CultureInfo.InvariantCulture), arg2.ToString(CultureInfo.InvariantCulture));
-            LogWarning(s.ToString());
-        }
+        string s = string.Format(str, arg0, arg1, arg2);
+        LogWarning(s);
     }
 
     public static void LogWarning(string str, params object[] param)
@@ -150,40 +149,34 @@ public static class Debugger
 
     public static void LogError(string str)
     {
+        if (!UseLog)
+            return;
         str = GetLogFormat(str);
-
-        if (useLog) {
-            Debug.LogError(str);
-        }
+        Debug.LogError(str);
+        StringPool.Collect(str);
     }
 
-    public static void LogError<TA>(TA message) where TA : IConvertible
+    public static void LogError(object str)
     {
-        LogError(message.ToString(CultureInfo.InvariantCulture));
+        LogError(str.ToString());
     }
 
-    public static void LogError<TA>(string str, TA arg0) where TA : IConvertible
+    public static void LogError(string str, object arg0)
     {
-        using (zstring.Block()) {
-            var s = zstring.Format(str, arg0.ToString(CultureInfo.InvariantCulture));
-            LogError(s.ToString());
-        }
+        string s = string.Format(str, arg0);
+        LogError(s);
     }
 
-    public static void LogError<TA>(string str, TA arg0, TA arg1) where TA : IConvertible
+    public static void LogError(string str, object arg0, object arg1)
     {
-        using (zstring.Block()) {
-            var s = zstring.Format(str, arg0.ToString(CultureInfo.InvariantCulture), arg1.ToString(CultureInfo.InvariantCulture));
-            LogError(s.ToString());
-        }
+        string s = string.Format(str, arg0, arg1);
+        LogError(s);
     }
 
-    public static void LogError<TA>(string str, TA arg0, TA arg1, TA arg2) where TA : IConvertible
+    public static void LogError(string str, object arg0, object arg1, object arg2)
     {
-        using (zstring.Block()) {
-            var s = zstring.Format(str, arg0.ToString(CultureInfo.InvariantCulture), arg1.ToString(CultureInfo.InvariantCulture), arg2.ToString(CultureInfo.InvariantCulture));
-            LogError(s.ToString());
-        }
+        string s = string.Format(str, arg0, arg1, arg2);
+        LogError(s);
     }
 
     public static void LogError(string str, params object[] param)
@@ -195,24 +188,21 @@ public static class Debugger
 
     public static void LogException(Exception e)
     {
+        if (!UseLog)
+            return;
         threadStack = e.StackTrace;
         string str = GetLogFormat(e.Message);
-
-        if (useLog) {
-            Debug.LogError(str);
-        }
+        Debug.LogError(str);
     }
 
     public static void LogException(string str, Exception e)
     {
+        if (!UseLog)
+            return;
         threadStack = e.StackTrace;
-        using (zstring.Block()) {
-            var exceptionStr = zstring.Concat(str, e.Message);
-            str = GetLogFormat(exceptionStr);
-        }
-        if (useLog) {
-            Debug.LogError(str);
-        }
+        str = GetLogFormat(str + e.Message);
+        Debug.LogError(str);
+        StringPool.Collect(str);
     }
 }
 

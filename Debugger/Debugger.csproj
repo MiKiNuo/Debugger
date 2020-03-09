@@ -44,17 +44,11 @@
     <Compile Include="ConstStringTable.cs" />
     <Compile Include="CString.cs" />
     <Compile Include="Debugger.cs" />
-    <Compile Include="ExtendMethods.cs" />
     <Compile Include="ExtensionLibs.cs" />
-    <Compile Include="FreeList.cs" />
-    <Compile Include="ILog.cs" />
     <Compile Include="IStringBlock.cs" />
     <Compile Include="NumberFormatercs.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
-    <Compile Include="StringBuilderCache.cs" />
-    <Compile Include="StringBuilderExtensions.cs" />
     <Compile Include="StringPool.cs" />
-    <Compile Include="zstring.cs" />
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <PropertyGroup>
